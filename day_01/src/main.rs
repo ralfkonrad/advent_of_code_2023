@@ -1,7 +1,9 @@
+use solver::solve;
+
 pub mod input;
+pub mod solver;
 
 fn main() {
-    for line in input::DATA.lines() {
-        println!("{}", line);
-    }
+    let result = solve(input::DATA);
+    print!("The result of this riddle is {}!", result)
 }
