@@ -8,4 +8,5 @@ edition = "2021"
 [dependencies]
 googletest = "0.10.0"
 indoc = "2.0.4"
+regex = "1.10.2"
 rstest = "0.18.2"
