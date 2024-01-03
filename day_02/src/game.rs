@@ -1,9 +1,11 @@
+use crate::draw::Draw;
+use crate::draw::Draws;
 use regex::Regex;
 
 #[derive(Debug)]
 pub struct Game {
-    #[allow(dead_code)]
     pub number: u32,
+    pub draws: Draws,
 }
 
 impl Game {
@@ -11,7 +13,9 @@ impl Game {
         let regex = Regex::new(r"Game (?<number>\d+): (?<cubes>[\w\s,;]+)").unwrap();
         let captures = regex.captures(line).unwrap();
         let number = captures["number"].parse::<u32>().unwrap();
-        Self { number }
+        let draws = Draw::parse(&captures["cubes"]);
+
+        Self { number, draws }
     }
 }
 
@@ -22,7 +26,10 @@ mod tests {
     use rstest::rstest;
 
     const GAME_11_STR: &str = "Game 11: 5 blue, 7 red; 2 green, 1 blue, 12 red; 7 green, 8 red, 4 blue; 3 blue, 8 red; 6 green, 9 red, 3 blue; 11 green, 12 red";
-    const GAME_11: Game = Game { number: 11 };
+    const GAME_11: Game = Game {
+        number: 11,
+        draws: Vec::new(),
+    };
 
     #[googletest::test]
     #[rstest]
@@ -30,5 +37,6 @@ mod tests {
     fn test_game_parser(#[case] line: &str, #[case] expected: Game) {
         let parsed_game = Game::parse(line);
         expect_that!(parsed_game.number, eq(expected.number));
+        expect_that!(parsed_game.draws.len(), eq(expected.draws.len()));
     }
 }

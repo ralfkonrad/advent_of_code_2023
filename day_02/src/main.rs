@@ -1,8 +1,9 @@
 use solver::solve;
 
-pub mod game;
-pub mod input;
-pub mod solver;
+mod draw;
+mod game;
+mod input;
+mod solver;
 
 fn main() {
     let result = solve(input::DATA);
