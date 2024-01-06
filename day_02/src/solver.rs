@@ -1,22 +1,33 @@
+use crate::game::draw::Draw;
 use crate::game::Game;
 
-pub fn solve(input: &str) -> usize {
-    input.lines().map(solve_line).filter(|b| *b).count()
-}
+pub fn solve(max_draw: &Draw, input: &str) -> (u32, u32) {
+    let result1 = input
+        .lines()
+        .map(Game::parse)
+        .filter(|game| game.fits_into(max_draw))
+        .map(|game| game.id)
+        .sum();
 
-fn solve_line(line: &str) -> bool {
-    let _game = Game::parse(line);
-    todo!()
+    let result2 = input
+        .lines()
+        .map(Game::parse)
+        .map(|game| game.get_minimal_possible_draw())
+        .map(|draw| draw.power())
+        .sum();
+
+    (result1, result2)
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::game::draw::MAX_DRAW;
     use crate::input::DATA;
-    use crate::solver::*;
+    use crate::solver::solve;
+    use googletest::prelude::*;
 
-    #[test]
-    #[should_panic]
+    #[googletest::test]
     fn test_input() {
-        _ = solve(DATA)
+        expect_that!(solve(&MAX_DRAW, DATA), eq((2061, 72596)))
     }
 }
