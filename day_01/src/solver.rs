@@ -1,5 +1,12 @@
-pub fn solve(input: &str) -> u32 {
-    input.lines().map(solve_line).sum()
+pub fn solve(input: &str) -> (u32, u32) {
+    let result1 = input.lines().map(solve_line).sum();
+    let result2 = input
+        .lines()
+        .map(replace_digit_line)
+        .map(|line| solve_line(line.as_str()))
+        .sum();
+
+    (result1, result2)
 }
 
 fn solve_line(line: &str) -> u32 {
@@ -16,6 +23,21 @@ fn solve_line(line: &str) -> u32 {
         Some(f) => f * 10 + last.expect("If there is a first, there must be a last"),
         None => 0,
     }
+}
+
+fn replace_digit_line(line: &str) -> String {
+    /* This is a bit odd as 'oneight' counts as '18'.
+     * With these replacements we get 'one1oneight8eight'
+     * which is somehow the desired result*/
+    line.replace("one", "one1one")
+        .replace("two", "two2two")
+        .replace("three", "three3three")
+        .replace("four", "four4four")
+        .replace("five", "five5five")
+        .replace("six", "six6six")
+        .replace("seven", "seven7seven")
+        .replace("eight", "eight8eight")
+        .replace("nine", "nine9nine")
 }
 
 #[cfg(test)]
@@ -40,6 +62,6 @@ mod tests {
     #[googletest::test]
     #[test]
     fn test_input() {
-        expect_that!(solve(DATA), eq(54390))
+        expect_that!(solve(DATA), eq((54390, 54277)))
     }
 }
