@@ -1,30 +1,22 @@
+use std::result;
+
+use crate::engine_schematic::{self, EngineSchematic};
+
 pub fn solve(input: &str) -> (u32, u32) {
-    let result1 = input.len().try_into().expect("This should fit");
+    let engine_schematic = EngineSchematic::parse(input);
+    let result1 = engine_schematic.get_numbers().iter().sum::<u32>();
     (result1, 0)
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::input::tests::TEST_DATA;
+    use crate::input::tests::TEST_DATA_RESULT;
     use googletest::prelude::*;
-    use indoc::indoc;
-
-    const TEST_DATA: &str = indoc! {"
-        467..114..
-        ...*......
-        ..35..633.
-        ......#...
-        617*......
-        .....+.58.
-        ..592.....
-        ......755.
-        ...$.*....
-        .664.598..
-    "};
-    const TEST_DATE_RESULT: u32 = 4361;
 
     #[googletest::test]
     fn test_solve() {
-        expect_that!(super::solve(TEST_DATA), eq((TEST_DATE_RESULT, 0)))
+        expect_that!(super::solve(TEST_DATA), eq((TEST_DATA_RESULT, 0)))
     }
 
     #[googletest::test]
