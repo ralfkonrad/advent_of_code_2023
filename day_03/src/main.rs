@@ -1,6 +1,5 @@
 mod engine_schematic;
 mod input;
-mod input_to_2darray;
 mod solver;
 
 use crate::input::DATA;

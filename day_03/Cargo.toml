@@ -8,5 +8,4 @@ edition = "2021"
 [dependencies]
 googletest = "0.10.0"
 indoc = "2.0.4"
-ndarray = "0.15.6"
 rstest = "0.18.2"

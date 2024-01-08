@@ -1,6 +1,4 @@
-use std::result;
-
-use crate::engine_schematic::{self, EngineSchematic};
+use crate::engine_schematic::EngineSchematic;
 
 pub fn solve(input: &str) -> (u32, u32) {
     let engine_schematic = EngineSchematic::parse(input);
