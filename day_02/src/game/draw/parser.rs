@@ -39,7 +39,7 @@ mod tests {
     #[case(DRAWS_STR, expected_draws())]
     fn test_parser(#[case] draws_str: &str, #[case] expected: Draws) {
         let parsed_draws = super::parse(draws_str);
-        expect_that!(parsed_draws, eq(expected))
+        expect_that!(parsed_draws, eq(&expected))
     }
 
     #[fixture]
