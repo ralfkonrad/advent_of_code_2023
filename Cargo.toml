@@ -1,8 +1,11 @@
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace]
-members = [
-    "day_01",
-    "day_02"
-]
+members = ["day_01", "day_02"]
 resolver = "2"
+
+[workspace.dependencies]
+googletest = { version = "0.14.0" }
+indoc = { version = "2.0.4" }
+regex = { version = "1.10.2" }
+rstest = { version = "0.25.0" }
