@@ -70,7 +70,7 @@ mod tests {
         let parsed_game = Game::parse(line);
         expect_that!(parsed_game.id, eq(expected.id));
         expect_that!(parsed_game.draws.len(), eq(expected.draws.len()));
-        expect_that!(parsed_game, eq(expected))
+        expect_that!(parsed_game, eq(&expected))
     }
 
     #[googletest::test]
@@ -79,7 +79,7 @@ mod tests {
     fn test_minimal_possible_draw(#[case] line: &str, #[case] expected: Draw) {
         let parsed_game = Game::parse(line);
         let minimal_possible_draw = parsed_game.get_minimal_possible_draw();
-        expect_that!(minimal_possible_draw, eq(expected))
+        expect_that!(minimal_possible_draw, eq(&expected))
     }
 
     #[fixture]
