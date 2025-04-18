@@ -91,6 +91,7 @@ mod test {
     #[case(".23",  vec![Number::new(23, 0, 1, 2)])]
     #[case(".23.", vec![Number::new(23, 0, 1, 2)])]
     #[case("23.",  vec![Number::new(23, 0, 0, 1)])]
+    #[case("23.34",  vec![Number::new(23, 0, 0, 1), Number::new(34, 0, 3, 4)])]
     fn test_get_numbers(#[case] input: &str, #[case] numbers: Vec<Number>) {
         let engine_schematic = EngineSchematic::parse(input);
         expect_that!(*Number::get_numbers(&engine_schematic), eq(numbers))
