@@ -14,4 +14,4 @@ description = "Advent of Code 2023"
 googletest = { version = "0.14.0" }
 indoc = { version = "2.0.4" }
 regex = { version = "1.10.2" }
-rstest = { version = "0.25.0" }
+rstest = { version = "0.26.1" }
