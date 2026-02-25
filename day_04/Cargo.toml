@@ -1,0 +1,13 @@
+[package]
+name = "day_04"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description.workspace = true
+
+[dependencies]
+indoc = { workspace = true }
+
+[dev-dependencies]
+googletest = { workspace = true }
+rstest = { workspace = true }
