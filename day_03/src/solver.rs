@@ -16,7 +16,10 @@ mod tests {
 
     #[googletest::test]
     fn test_solve() {
-        expect_that!(super::solve(TEST_DATA), eq((TEST_DATA_RESULT, TEST_DATA_RESULT_2)))
+        expect_that!(
+            super::solve(TEST_DATA),
+            eq((TEST_DATA_RESULT, TEST_DATA_RESULT_2))
+        )
     }
 
     #[googletest::test]

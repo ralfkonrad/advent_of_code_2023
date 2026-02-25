@@ -60,7 +60,6 @@ mod tests {
     }
 
     #[googletest::test]
-    #[test]
     fn test_input() {
         expect_that!(solve(DATA), eq((54390, 54277)))
     }

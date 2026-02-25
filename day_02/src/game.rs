@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use crate::game::draw::Draw;
 use crate::game::draw::Draws;
 use regex::Regex;
@@ -12,12 +14,14 @@ pub struct Game {
 
 impl Game {
     pub fn parse(line: &str) -> Self {
-        let regex = Regex::new(r"Game (?<id>\d+): (?<cubes>[\w\s,;]+)")
-            .expect("This should be a valid regular expression");
-        let captures = regex.captures(line).expect("This should be not a game");
+        static GAME_RE: LazyLock<Regex> = LazyLock::new(|| {
+            Regex::new(r"Game (?<id>\d+): (?<cubes>[\w\s,;]+)")
+                .expect("This should be a valid regular expression")
+        });
+        let captures = GAME_RE.captures(line).expect("This should be not a game");
         let id = captures["id"]
             .parse::<u32>()
-            .expect("A game should hve an ID");
+            .expect("A game should have an ID");
         let draws = Draw::parse(&captures["cubes"]);
 
         Self { id, draws }

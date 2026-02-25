@@ -1,12 +1,16 @@
 #[derive(Debug, PartialEq, Eq, Hash)]
-pub struct Position {
+pub(in crate::engine_schematic) struct Position {
     row: usize,
     column_start: usize,
     column_end: usize,
 }
 
 impl Position {
-    pub fn new(row: usize, column_start: usize, column_end: usize) -> Self {
+    pub(in crate::engine_schematic) fn new(
+        row: usize,
+        column_start: usize,
+        column_end: usize,
+    ) -> Self {
         Self {
             row,
             column_start,
@@ -15,7 +19,11 @@ impl Position {
     }
     /// Returns all (row, column) cells adjacent to this number position,
     /// including diagonals, clamped to the given grid dimensions.
-    pub fn adjacent_cells(&self, rows: usize, columns: usize) -> Vec<(usize, usize)> {
+    pub(in crate::engine_schematic) fn adjacent_cells(
+        &self,
+        rows: usize,
+        columns: usize,
+    ) -> Vec<(usize, usize)> {
         let mut cells = Vec::new();
         let row_start = self.row.saturating_sub(1);
         let row_end = (self.row + 1).min(rows - 1);

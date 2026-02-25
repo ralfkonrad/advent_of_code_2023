@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use super::Draw;
 use super::Draws;
 use regex::Regex;
@@ -15,8 +17,17 @@ fn parse_draw(cube: &str) -> Draw {
 }
 
 fn capture(trimmed: &str, color: &str) -> u32 {
-    let regex = Regex::new(&format!("(?<number>\\d+) {color}"))
-        .expect("This should be a valid regular expression");
+    static BLUE_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?<number>\d+) blue").unwrap());
+    static RED_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?<number>\d+) red").unwrap());
+    static GREEN_RE: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"(?<number>\d+) green").unwrap());
+
+    let regex = match color {
+        "blue" => &*BLUE_RE,
+        "red" => &*RED_RE,
+        "green" => &*GREEN_RE,
+        _ => panic!("Unknown color: {color}"),
+    };
     let captures = regex.captures(trimmed);
     match captures {
         Some(capture) => capture["number"]

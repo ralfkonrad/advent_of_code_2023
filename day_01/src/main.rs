@@ -1,7 +1,7 @@
 use solver::solve;
 
-pub mod input;
-pub mod solver;
+mod input;
+mod solver;
 
 fn main() {
     let (result1, result2) = solve(input::DATA);

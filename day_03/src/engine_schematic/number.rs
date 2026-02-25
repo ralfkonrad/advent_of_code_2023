@@ -3,12 +3,12 @@ mod position;
 use position::Position;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
-pub struct Number {
+pub(super) struct Number {
     value: u32,
     position: Position,
 }
 
-pub type Numbers = Vec<Number>;
+pub(super) type Numbers = Vec<Number>;
 
 impl Number {
     pub fn new(value: u32, row: usize, column_start: usize, column_end: usize) -> Self {
@@ -24,18 +24,17 @@ impl Number {
         &self.position
     }
 
-    pub fn get_numbers(engine_schematic: &super::EngineSchematic) -> Numbers {
-        let mut numbers = Vec::<Number>::new();
-        for row in engine_schematic.vec2d.iter().enumerate() {
-            numbers.append(&mut get_numbers_from_row(row))
-        }
-        numbers
+    pub(super) fn get_numbers(engine_schematic: &super::EngineSchematic) -> Numbers {
+        engine_schematic
+            .vec2d
+            .iter()
+            .enumerate()
+            .flat_map(|(i, row)| get_numbers_from_row((i, row)))
+            .collect()
     }
 }
 
-fn get_numbers_from_row(tuple: (usize, &Vec<char>)) -> Vec<Number> {
-    let row = tuple.0;
-    let chars = tuple.1;
+fn get_numbers_from_row((row, chars): (usize, &[char])) -> Vec<Number> {
     let mut new_numbers = Vec::<Number>::new();
     let mut number: Option<u32> = None;
     let mut column_start: Option<usize> = None;
