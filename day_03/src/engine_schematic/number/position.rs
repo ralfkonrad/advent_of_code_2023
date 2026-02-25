@@ -25,4 +25,25 @@ impl Position {
     pub fn column_end(&self) -> usize {
         self.column_end
     }
+
+    /// Returns all (row, column) cells adjacent to this number position,
+    /// including diagonals, clamped to the given grid dimensions.
+    pub fn adjacent_cells(&self, rows: usize, columns: usize) -> Vec<(usize, usize)> {
+        let mut cells = Vec::new();
+        let row_start = self.row.saturating_sub(1);
+        let row_end = (self.row + 1).min(rows - 1);
+        let col_start = self.column_start.saturating_sub(1);
+        let col_end = (self.column_end + 1).min(columns - 1);
+
+        for r in row_start..=row_end {
+            for c in col_start..=col_end {
+                // Skip cells that are part of the number itself
+                if r == self.row && c >= self.column_start && c <= self.column_end {
+                    continue;
+                }
+                cells.push((r, c));
+            }
+        }
+        cells
+    }
 }

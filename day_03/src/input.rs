@@ -160,4 +160,5 @@ pub mod tests {
         .664.598..
     "};
     pub const TEST_DATA_RESULT: u32 = 4361;
+    pub const TEST_DATA_RESULT_2: u32 = 467835;
 }
