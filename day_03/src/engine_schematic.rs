@@ -11,10 +11,6 @@ pub struct EngineSchematic {
 }
 
 impl EngineSchematic {
-    pub fn get(&self, row: usize, column: usize) -> char {
-        self.vec2d[row][column]
-    }
-
     pub fn parse(input: &str) -> Self {
         let array2d = parser::input_to_2darray(input);
         let rows = array2d.len();

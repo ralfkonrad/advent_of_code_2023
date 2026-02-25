@@ -13,19 +13,6 @@ impl Position {
             column_end,
         }
     }
-
-    pub fn row(&self) -> usize {
-        self.row
-    }
-
-    pub fn column_start(&self) -> usize {
-        self.column_start
-    }
-
-    pub fn column_end(&self) -> usize {
-        self.column_end
-    }
-
     /// Returns all (row, column) cells adjacent to this number position,
     /// including diagonals, clamped to the given grid dimensions.
     pub fn adjacent_cells(&self, rows: usize, columns: usize) -> Vec<(usize, usize)> {
