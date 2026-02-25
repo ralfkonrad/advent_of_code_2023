@@ -9,7 +9,6 @@ description.workspace = true
 
 [dependencies]
 indoc = { workspace = true }
-regex = { workspace = true }
 
 [dev-dependencies]
 googletest = { workspace = true }

@@ -1,43 +1,47 @@
 pub fn solve(input: &str) -> (u32, u32) {
-    let result1 = input.lines().map(solve_line).sum();
-    let result2 = input
-        .lines()
-        .map(replace_digit_line)
-        .map(|line| solve_line(line.as_str()))
-        .sum();
+    let result1 = input.lines().map(|line| solve_line(line, false)).sum();
+    let result2 = input.lines().map(|line| solve_line(line, true)).sum();
 
     (result1, result2)
 }
 
-fn solve_line(line: &str) -> u32 {
-    let numerics: Vec<_> = line
-        .chars()
-        .filter(|c| c.is_numeric())
-        .map(|d| d.to_digit(10).unwrap())
-        .collect();
+const DIGIT_WORDS: [&str; 9] = [
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+];
 
-    let first = numerics.first();
-    let last = numerics.last();
+/// Single-pass scanner that finds first and last digits in a line.
+/// When `include_words` is true, also matches spelled-out digit words ("one".."nine").
+/// Handles overlapping words like "oneight" → first=1, last=8.
+fn solve_line(line: &str, include_words: bool) -> u32 {
+    let bytes = line.as_bytes();
+    let mut first: Option<u32> = None;
+    let mut last: u32 = 0;
+
+    for i in 0..bytes.len() {
+        let digit = if bytes[i].is_ascii_digit() {
+            Some((bytes[i] - b'0') as u32)
+        } else if include_words {
+            DIGIT_WORDS
+                .iter()
+                .enumerate()
+                .find(|(_, word)| bytes[i..].starts_with(word.as_bytes()))
+                .map(|(idx, _)| idx as u32 + 1)
+        } else {
+            None
+        };
+
+        if let Some(d) = digit {
+            if first.is_none() {
+                first = Some(d);
+            }
+            last = d;
+        }
+    }
 
     match first {
-        Some(f) => f * 10 + last.expect("If there is a first, there must be a last"),
+        Some(f) => f * 10 + last,
         None => 0,
     }
-}
-
-fn replace_digit_line(line: &str) -> String {
-    /* This is a bit odd as 'oneight' counts as '18'.
-     * With these replacements we get 'one1oneight8eight'
-     * which is somehow the desired result*/
-    line.replace("one", "one1one")
-        .replace("two", "two2two")
-        .replace("three", "three3three")
-        .replace("four", "four4four")
-        .replace("five", "five5five")
-        .replace("six", "six6six")
-        .replace("seven", "seven7seven")
-        .replace("eight", "eight8eight")
-        .replace("nine", "nine9nine")
 }
 
 #[cfg(test)]
@@ -56,7 +60,7 @@ mod tests {
     #[case("a1b2c3d4e5f", 15)]
     #[case("treb7uchet", 77)]
     fn test(#[case] line: &str, #[case] expected: u32) {
-        expect_that!(solve_line(line), eq(expected));
+        expect_that!(solve_line(line, false), eq(expected));
     }
 
     #[googletest::test]

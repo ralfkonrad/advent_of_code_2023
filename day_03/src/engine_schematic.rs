@@ -1,6 +1,8 @@
 mod number;
 mod parser;
 
+use std::collections::HashMap;
+
 use number::Number;
 
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -32,24 +34,27 @@ impl EngineSchematic {
 
     pub(crate) fn get_gear_ratios_sum(&self) -> u32 {
         let numbers = Number::get_numbers(self);
-        let mut sum = 0u32;
 
+        // Build a map from each cell to the indices of numbers adjacent to it.
+        // This lets us look up adjacent numbers for any '*' cell in O(1).
+        let mut cell_to_numbers: HashMap<(usize, usize), Vec<usize>> = HashMap::new();
+        for (idx, number) in numbers.iter().enumerate() {
+            for cell in number.position().adjacent_cells(self.rows, self.columns) {
+                cell_to_numbers.entry(cell).or_default().push(idx);
+            }
+        }
+
+        // For each '*' cell, check if exactly 2 numbers are adjacent.
+        let mut sum = 0u32;
         for row in 0..self.rows {
             for col in 0..self.columns {
                 if self.vec2d[row][col] != '*' {
                     continue;
                 }
-                let adjacent_numbers: Vec<&Number> = numbers
-                    .iter()
-                    .filter(|n| {
-                        n.position()
-                            .adjacent_cells(self.rows, self.columns)
-                            .contains(&(row, col))
-                    })
-                    .collect();
-
-                if adjacent_numbers.len() == 2 {
-                    sum += adjacent_numbers[0].value() * adjacent_numbers[1].value();
+                if let Some(adjacent) = cell_to_numbers.get(&(row, col))
+                    && adjacent.len() == 2
+                {
+                    sum += numbers[adjacent[0]].value() * numbers[adjacent[1]].value();
                 }
             }
         }
@@ -60,8 +65,7 @@ impl EngineSchematic {
         number
             .position()
             .adjacent_cells(self.rows, self.columns)
-            .iter()
-            .any(|&(r, c)| {
+            .any(|(r, c)| {
                 let ch = self.vec2d[r][c];
                 !ch.is_ascii_digit() && ch != '.'
             })

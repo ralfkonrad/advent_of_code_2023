@@ -13,5 +13,4 @@ description = "Advent of Code 2023"
 [workspace.dependencies]
 googletest = { version = "0.14.2" }
 indoc = { version = "2.0.7" }
-regex = { version = "1.12.3" }
 rstest = { version = "0.26.1" }
