@@ -1,12 +1,16 @@
 #[derive(Debug, PartialEq, Eq, Hash)]
-pub struct Position {
+pub(in crate::engine_schematic) struct Position {
     row: usize,
     column_start: usize,
     column_end: usize,
 }
 
 impl Position {
-    pub fn new(row: usize, column_start: usize, column_end: usize) -> Self {
+    pub(in crate::engine_schematic) fn new(
+        row: usize,
+        column_start: usize,
+        column_end: usize,
+    ) -> Self {
         Self {
             row,
             column_start,
@@ -14,36 +18,26 @@ impl Position {
         }
     }
 
-    pub fn row(&self) -> usize {
-        self.row
-    }
-
-    pub fn column_start(&self) -> usize {
-        self.column_start
-    }
-
-    pub fn column_end(&self) -> usize {
-        self.column_end
-    }
-
-    /// Returns all (row, column) cells adjacent to this number position,
+    /// Returns an iterator over all (row, column) cells adjacent to this number position,
     /// including diagonals, clamped to the given grid dimensions.
-    pub fn adjacent_cells(&self, rows: usize, columns: usize) -> Vec<(usize, usize)> {
-        let mut cells = Vec::new();
+    /// Zero allocations — yields cells lazily.
+    pub(in crate::engine_schematic) fn adjacent_cells(
+        &self,
+        rows: usize,
+        columns: usize,
+    ) -> impl Iterator<Item = (usize, usize)> + '_ {
         let row_start = self.row.saturating_sub(1);
         let row_end = (self.row + 1).min(rows - 1);
         let col_start = self.column_start.saturating_sub(1);
         let col_end = (self.column_end + 1).min(columns - 1);
 
-        for r in row_start..=row_end {
-            for c in col_start..=col_end {
-                // Skip cells that are part of the number itself
-                if r == self.row && c >= self.column_start && c <= self.column_end {
-                    continue;
-                }
-                cells.push((r, c));
-            }
-        }
-        cells
+        (row_start..=row_end).flat_map(move |r| {
+            (col_start..=col_end)
+                .filter(move |&c| {
+                    // Skip cells that are part of the number itself
+                    !(r == self.row && c >= self.column_start && c <= self.column_end)
+                })
+                .map(move |c| (r, c))
+        })
     }
 }

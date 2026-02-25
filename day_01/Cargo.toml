@@ -8,6 +8,8 @@ authors.workspace = true
 description.workspace = true
 
 [dependencies]
-googletest = { workspace = true }
 indoc = { workspace = true }
+
+[dev-dependencies]
+googletest = { workspace = true }
 rstest = { workspace = true }

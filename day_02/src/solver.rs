@@ -1,5 +1,5 @@
-use crate::game::draw::Draw;
 use crate::game::Game;
+use crate::game::draw::Draw;
 
 pub fn solve(max_draw: &Draw, input: &str) -> (u32, u32) {
     let result1 = input
